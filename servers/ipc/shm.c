@@ -32,15 +32,33 @@ static struct shm_struct *shm_find_id(int id)
 	return NULL;
 }
 
+int do_shm_open(message *m)
+{
+	printf("Call do_shm_open\n");
+
+	m->SHM_OPEN_RETID=2;
+	return OK;
+}
+
+int do_shm_unlink(message *m)
+{
+	printf("%s\n", "do_shm_unlink");
+	return NULL;
+}
+
 /*===========================================================================*
  *				do_shmget		     		     *
  *===========================================================================*/
 int do_shmget(message *m)
 {
+//	return EACCES;
+
 	struct shm_struct *shm;
 	long key, size, old_size;
 	int flag;
 	int id;
+	
+	printf("%s\n", "do_shmget");
 
 	key = m->SHMGET_KEY;
 	old_size = size = m->SHMGET_SIZE;

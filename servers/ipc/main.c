@@ -17,6 +17,7 @@ static struct {
 	{ IPC_SEMGET,	do_semget,	0 },
 	{ IPC_SEMCTL,	do_semctl,	0 },
 	{ IPC_SEMOP,	do_semop,	1 },
+	{ IPC_SHM_OPEN, do_shm_open,	0 },
 };
 
 #define SIZE(a) (sizeof(a)/sizeof(a[0]))
@@ -30,6 +31,7 @@ static void sef_cb_signal_handler(int signo);
 
 int main(int argc, char *argv[])
 {
+
 	message m;
 
 	/* SEF local startup. */
@@ -70,6 +72,8 @@ int main(int argc, char *argv[])
 		 */
 
 		ipc_number = call_type - (IPC_BASE + 1);
+
+		printf("call_type: %d, call_size: %d\n", ipc_number, SIZE(ipc_calls));
 
 		/* dispatch message */
 		if (ipc_number >= 0 && ipc_number < SIZE(ipc_calls)) {

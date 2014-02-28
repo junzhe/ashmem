@@ -27,7 +27,7 @@
  *   0x1400 - 0x14FF	VFS-FS transaction IDs
  *   0x1500 - 0x15FF	Block device requests and responses
  *   0x1600 - 0x16FF	VirtualBox (VBOX) requests (see vboxif.h)
- *
+ *   0x1700 - 0x17FF	Ashmem server requests	
  * Zero and negative values are widely used for OK and error responses.
  */
 
@@ -1128,6 +1128,9 @@
 #	define SEMOP_OPS	m2_l1
 #	define SEMOP_SIZE	m2_i2
 
+#define IPC_SHM_OPEN	(IPC_BASE+8)
+#	define SHM_OPEN_RETID	m2_i1
+
 /*===========================================================================*
  *                Messages for Scheduling				     *
  *===========================================================================*/
@@ -1280,4 +1283,29 @@
 #  define BDEV_NOFLAGS		0x00	/* no flags are set */
 #  define BDEV_FORCEWRITE	0x01	/* force write to disk immediately */
 
+/*=========================================================================*
+ *			Messages for ashmem server                         *
+ *=========================================================================*/
+
+#define ASHMEM_BASE        0x1600
+
+/* Shared Memory */
+#define ASHMEM_CREATE		(ASHMEM_BASE+1)
+#       define ASHMEM_CREATE_KEY	m2_l1
+#       define ASHMEM_CREATE_SIZE	m2_l2
+#       define ASHMEM_CREATE_FLAG	m2_i1
+#       define ASHMEM_CREATE_RETID	m2_i2
+#define ASHMEM_RELEASE		(ASHMEM_BASE+2)
+#       define ASHMEM_RELEASE_ADDR	m2_l1
+#define ASHMEM_SET_NAME		(ASHMEM_BASE+3)
+#       define ASHMEM_SET_NAME_KEY	m2_l1
+#       define ASHMEM_SET_NAME_NAME	m2_l1
+#define ASHMEM_SET_SIZE		(ASHMEM_BASE+4)
+#       define ASHMEM_SET_SIZE_KEY      m2_l1  
+#       define ASHMEM_SET_SIZE_SIZE     m2_l1
+#define ASHMEM_MMAP		(ASHMEM_BASE+5)
+#       define ASHMEM_MMAP_ID		m2_i1
+#       define ASHMEM_MMAP_ADDR		m2_l1
+#       define ASHMEM_MMAP_FLAG		m2_i2
+#       define ASHMEM_MMAP_RETADDR	m2_l2
 /* _MINIX_COM_H */

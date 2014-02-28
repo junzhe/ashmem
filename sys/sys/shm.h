@@ -143,6 +143,7 @@ void	*shmat(int, const void *, int);
 int	shmctl(int, int, struct shmid_ds *) __RENAME(__shmctl50);
 int	shmdt(const void *);
 int	shmget(key_t, size_t, int);
+int	shm_open(const char *, int, mode_t);
 __END_DECLS
 
 #endif /* !_SYS_SHM_H_ */

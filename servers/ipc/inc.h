@@ -33,6 +33,8 @@ int do_shmget(message *);
 int do_shmat(message *);
 int do_shmdt(message *);
 int do_shmctl(message *);
+int do_shm_open(message *);
+int do_shm_unlink(message *);
 int check_perm(struct ipc_perm *, endpoint_t, int);
 void update_refcount_and_destroy(void);
 int do_semget(message *);
