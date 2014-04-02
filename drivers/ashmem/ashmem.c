@@ -29,7 +29,7 @@ static struct chardriver ashmem_tab =
 	ashmem_alarm,
 	ashmem_cancel,
 	ashmem_select,
-	NULL
+	ashmem_other	
 };
 
 /** Represents the /dev/ashmem device. */
@@ -38,6 +38,7 @@ static struct device ashmem_device;
 static int ashmem_open(message *m)
 {
 	printf("call ashmem_open\n");
+	printf("%d %d %d\n", m->ADDRESS, m->POSITION, m->HIGHPOS);
 	return OK;
 }
 
@@ -95,6 +96,12 @@ static int ashmem_ioctl(message *m)
 	printf("call ashmem_ioctl\n");
 
 	printf("%d, %d, %d\n", m->COUNT, m->REQUEST, ASHMEM_IOC_SET_NAME);
+
+	char t[10];
+
+	sys_safecopyfrom(VFS_PROC_NR, (cp_grant_id_t) m->IO_GRANT, (vir_bytes) 0, (vir_bytes) t, 4);
+
+	printf("%s\n", t);
 }
 
 static void ashmem_cleanup(void)
@@ -115,6 +122,13 @@ static int ashmem_cancel(message *m)
 static int ashmem_select(message *m)
 {
 	printf("call ashmem_select\n");
+}
+
+static int ashmem_other(message *m)
+{
+	printf("ashmem_other %d\n", (m->m_type == ASHMEM_CREATE));
+
+	return OK;
 }
 
 static int sef_cb_lu_state_save(int UNUSED(state))

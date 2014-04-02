@@ -824,6 +824,7 @@ struct
 	{ "STIME",		SYS_STIME },
 	{ "VMCTL",		SYS_VMCTL },
 	{ "MEMSET",		SYS_MEMSET },
+	{ "BINDERCOPY",		SYS_BINDERCOPY },
 	{ NULL,		0 }
 };
 

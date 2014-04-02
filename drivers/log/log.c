@@ -13,8 +13,12 @@
 
 #define LOG_DEBUG		0	/* enable/ disable debugging */
 
-#define NR_DEVS            	1	/* number of minor devices */
+#define NR_DEVS            	5	/* number of minor devices */
 #define MINOR_KLOG		0	/* /dev/klog */
+#define MINOR_MAIN		1	/* /dev/log/main */
+#define MINOR_RADIO		2	/* /dev/log/radio */
+#define MINOR_EVENTS		3	/* /dev/log/events */
+#define MINOR_SYSTEM		4	/* /dev/log/system */
 
 #define LOGINC(n, i)	do { (n) = (((n) + (i)) % LOG_SIZE); } while(0)
 
@@ -292,6 +296,7 @@ static int log_transfer(
   struct logdevice *log;
   size_t vir_offset = 0;
 
+
   if(log_device < 0 || log_device >= NR_DEVS)
   	return EIO;
 
@@ -306,6 +311,7 @@ static int log_transfer(
 	switch (log_device) {
 
 	case MINOR_KLOG:
+	case MINOR_MAIN:
 	    if (opcode == DEV_GATHER_S) {
 	    	if (log->log_source != NONE || count < 1) {
 	    		/* There's already someone hanging to read, or

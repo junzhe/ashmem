@@ -106,7 +106,9 @@ SRCS+=	pci_attr_r16.c \
 	pci_rescan_bus.c \
 	pci_reserve.c \
 	pci_set_acl.c \
-	pci_slot_name.c
+	pci_slot_name.c \
+	binder.c \
+	sys_bindercopy.c 
 .endif
 
 .if ${MKCOVERAGE} != "no"

@@ -41,6 +41,8 @@ int sys_schedule(endpoint_t proc_ep, int priority, int quantum, int
 int sys_schedctl(unsigned flags, endpoint_t proc_ep, int priority, int
 	quantum, int cpu);
 
+int sys_bindercopy(endpoint_t dst_t, endpoint_t src_t, vir_bytes dst_addr, vir_bytes src_addr, size_t size, size_t dst_offset, size_t src_offset);
+
 /* Shorthands for sys_runctl() system call. */
 #define sys_stop(proc_ep) sys_runctl(proc_ep, RC_STOP, 0)
 #define sys_delay_stop(proc_ep) sys_runctl(proc_ep, RC_STOP, RC_DELAY)

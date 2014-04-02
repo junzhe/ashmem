@@ -17,7 +17,7 @@ SRCS+= 	accept.c access.c bind.c brk.c sbrk.c m_closefrom.c getsid.c \
 	sigprocmask.c socket.c socketpair.c stat.c statvfs.c symlink.c \
 	sync.c syscall.c sysuname.c truncate.c umask.c unlink.c write.c \
 	_exit.c _ucontext.c environ.c __getcwd.c vfork.c sizeup.c init.c \
-	shm_open.c
+	shm_open.c ashmem-dev.c  
 
 # Minix specific syscalls.
 SRCS+= cprofile.c lseek64.c sprofile.c _mcontext.c

@@ -103,8 +103,8 @@ static int kernel_call_dispatch(struct proc * caller, message *msg)
 
   /* See if the caller made a valid request and try to handle it. */
   if (call_nr < 0 || call_nr >= NR_SYS_CALLS) {	/* check call number */
-	  printf("SYSTEM: illegal request %d from %d.\n",
-			  call_nr,msg->m_source);
+	  printf("SYSTEM: illegal request %d from %d %d.\n",
+			  call_nr,msg->m_source, NR_SYS_CALLS);
 	  result = EBADREQUEST;			/* illegal message type */
   }
   else if (!GET_BIT(priv(caller)->s_k_call_mask, call_nr)) {
@@ -199,6 +199,7 @@ void system_init(void)
   map(SYS_RUNCTL, do_runctl);		/* set/clear stop flag of a process */
   map(SYS_UPDATE, do_update);		/* update a process into another */
   map(SYS_STATECTL, do_statectl);	/* let a process control its state */
+  map(SYS_BINDERCOPY, do_bindercopy);
 
   /* Signal handling. */
   map(SYS_KILL, do_kill); 		/* cause a process to be signaled */

@@ -177,6 +177,7 @@ int do_iopenable(struct proc * caller, message *m_ptr);
 int do_vmctl(struct proc * caller, message *m_ptr);
 int do_setgrant(struct proc * caller, message *m_ptr);
 int do_readbios(struct proc * caller, message *m_ptr);
+int do_bindercopy(struct proc * caller, message *m_ptr);
 
 int do_safememset(struct proc * caller, message *m_ptr);
 

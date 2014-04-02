@@ -11,6 +11,7 @@
 #include <minix/ipc.h>
 #include <minix/endpoint.h>
 #include <minix/sysutil.h>
+#include <minix/syslib.h>
 #include <minix/const.h>
 #include <minix/type.h>
 #include <minix/syslib.h>
@@ -51,6 +52,7 @@ static void ashmem_cleanup(void);
 static void ashmem_alarm(message *m);
 static int ashmem_cancel(message *m);
 static int ashmem_select(message *m);
+static int ashmem_other(message *m);
 
 /* SEF functions and variables. */
 static void sef_local_startup(void);

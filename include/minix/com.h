@@ -28,6 +28,9 @@
  *   0x1500 - 0x15FF	Block device requests and responses
  *   0x1600 - 0x16FF	VirtualBox (VBOX) requests (see vboxif.h)
  *   0x1700 - 0x17FF	Ashmem server requests	
+ *   0x1800 - 0x18FF	Binder server requests
+ *   0x1900 - 0x19FF	Aserman	server requests
+ *   0x1A00 - 0x1AFF	Zygote server requestS 
  * Zero and negative values are widely used for OK and error responses.
  */
 
@@ -352,8 +355,10 @@
 
 #  define SYS_SAFEMEMSET (KERNEL_CALL + 56)	/* sys_safememset() */
 
+#  define SYS_BINDERCOPY (KERNEL_CALL + 57)
+
 /* Total */
-#define NR_SYS_CALLS	57	/* number of kernel calls */
+#define NR_SYS_CALLS	58	/* number of kernel calls */
 
 #define SYS_CALL_MASK_SIZE BITMAP_CHUNKS(NR_SYS_CALLS)
 
@@ -1287,7 +1292,7 @@
  *			Messages for ashmem server                         *
  *=========================================================================*/
 
-#define ASHMEM_BASE        0x1600
+#define ASHMEM_BASE        0x1700
 
 /* Shared Memory */
 #define ASHMEM_CREATE		(ASHMEM_BASE+1)
@@ -1298,14 +1303,138 @@
 #define ASHMEM_RELEASE		(ASHMEM_BASE+2)
 #       define ASHMEM_RELEASE_ADDR	m2_l1
 #define ASHMEM_SET_NAME		(ASHMEM_BASE+3)
-#       define ASHMEM_SET_NAME_KEY	m2_l1
+#       define ASHMEM_SET_NAME_ID	m2_l1
 #       define ASHMEM_SET_NAME_NAME	m2_l1
 #define ASHMEM_SET_SIZE		(ASHMEM_BASE+4)
-#       define ASHMEM_SET_SIZE_KEY      m2_l1  
+#       define ASHMEM_SET_SIZE_ID      m2_l1  
 #       define ASHMEM_SET_SIZE_SIZE     m2_l1
 #define ASHMEM_MMAP		(ASHMEM_BASE+5)
 #       define ASHMEM_MMAP_ID		m2_i1
 #       define ASHMEM_MMAP_ADDR		m2_l1
 #       define ASHMEM_MMAP_FLAG		m2_i2
 #       define ASHMEM_MMAP_RETADDR	m2_l2
+#define ASHMEM_PIN		(ASHMEM_BASE+6)
+#	define ASHMEM_PIN_ID		m2_l1
+#	define ASHMEM_PIN_LEN		m2_l2
+#	define ASHMEM_PIN_OFFSET	m4_l1
+#define ASHMEM_UNPIN		(ASHMEM_BASE+7)
+# 	define ASHMEM_UNPIN_ID		m2_l1
+#	define ASHMEM_UNPIN_LEN		m2_l2
+#	define ASHMEM_UNPIN_OFFSET	m4_l1
+#define ASHMEM_SET_PROT		(ASHMEM_BASE+8)
+#	define ASHMEM_SET_PROT_ID	m2_i1
+#	define ASHMEM_SET_PROT_PROT	m2_l1
+#define ASHMEM_GET_SIZE		(ASHMEM_BASE+9)
+#	define ASHMEM_GET_SIZE_ID	m2_i1
+
+/*=========================================================================*
+ *			Messages for binder server			   *
+ *=========================================================================*/
+
+ #define BINDER_BASE	0x1800
+
+ /* Binder */
+ #define BINDER_CREATE			(BINDER_BASE+1)
+ #	define BINDER_CREATE_SIZE	m2_l1
+ #	define BINDER_CREATE_PID	m2_i1
+ #	define BINDER_CREATE_RETID	m2_l2
+ #	define BINDER_CREATE_RETADDR	m2_p1
+ #define BINDER_READ		(BINDER_BASE+2)
+ #	define BINDER_READ_DATA_SIZE	m10_i1
+ #	define BINDER_READ_DATA_BUFF	m10_l1
+ #	define BINDER_READ_OFFSET_SIZE	m10_i2
+ #	define BINDER_READ_OFFSET_BUFF	m10_l2
+ #	define BINDER_READ_CODE		m10_i3
+ #	define BINDER_READ_BINDER_REF	m10_i4
+ #	define BINDER_READ_BINDER_ADDR	m10_l3
+ #define BINDER_WRITE		(BINDER_BASE+3)
+ #	define BINDER_WRITE_DATA_SIZE		m10_i1
+ #	define BINDER_WRITE_DATA_GRANT		m10_l1
+ #	define BINDER_WRITE_OFFSET_SIZE		m10_i2
+ #	define BINDER_WRITE_OFFSET_GRANT	m10_l2
+ #	define BINDER_WRITE_CODE		m10_i3
+ #	define BINDER_WRITE_BINDER_REF		m10_i4
+ #	define BINDER_WRITE_BINDER_ADDR		m10_l3
+ #define BINDER_READ_KERNEL            (BINDER_BASE+4) 
+ #      define BINDER_READ_KERNEL_DATA_SIZE    m10_i1  
+ #      define BINDER_READ_KERNEL_DATA_BUFF    m10_l1  
+ #      define BINDER_READ_KERNEL_OFFSET_SIZE  m10_i2  
+ #      define BINDER_READ_KERNEL_OFFSET_BUFF  m10_l2  
+ #      define BINDER_READ_KERNEL_CODE         m10_i3
+ #      define BINDER_READ_KERNEL_BINDER_REF   m10_i4 
+ #      define BINDER_READ_KERNEL_BINDER_ADDR  m10_l3  
+ #define BINDER_WRITE_KERNEL           (BINDER_BASE+5)
+ #      define BINDER_WRITE_KERNEL_DATA_SIZE           m10_i1
+ #      define BINDER_WRITE_KERNEL_DATA_BUFF           m10_l1
+ #      define BINDER_WRITE_KERNEL_OFFSET_SIZE         m10_i2
+ #      define BINDER_WRITE_KERNEL_OFFSET_BUFF         m10_l2
+ #      define BINDER_WRITE_KERNEL_CODE                m10_i3
+ #      define BINDER_WRITE_KERNEL_BINDER_REF          m10_i4
+ #      define BINDER_WRITE_KERNEL_BINDER_ADDR         m10_l3
+/*==========================================================================*
+ *			Messages for aserman server			    *
+ *==========================================================================*/
+
+ #define ASERMAN_BASE 0x1900
+
+ /* ASERMAN */
+ #define ASERMAN_BINDER_READ	(ASERMAN_BASE + 1)
+ #	define ASERMAN_BINDER_READ_DATA_ADDR	m7_p1
+ #	define ASERMAN_BINDER_READ_DATA_SIZE	m7_i1
+ #	define ASERMAN_BINDER_READ_OFFSET_ADDR	m7_p2
+ #	define ASERMAN_BINDER_READ_OFFSET_SIZE	m7_i2
+ #	define ASERMAN_BINDER_READ_CODE		m7_i3
+ #define ASERMAN_BINDER_WRITE	(ASERMAN_BASE + 2)
+ #	define ASERMAN_BINDER_WRITE_DATA_GRANT	m10_l1
+ #	define ASERMAN_BINDER_WRITE_DATA_SIZE	m10_i1
+ #	define ASERMAN_BINDER_WRITE_OFFSET_GRANT m10_l2
+ #	define ASERMAN_BINDER_WRITE_OFFSET_SIZE m10_i2
+ #	define ASERMAN_BINDER_WRITE_CODE	m10_i3
+ #define ASERMAN_BINDER_READ_KERNEL    (ASERMAN_BASE + 3)
+ #      define ASERMAN_BINDER_READ_KERNEL_DATA_ADDR    m7_p1
+ #      define ASERMAN_BINDER_READ_KERNEL_DATA_SIZE    m7_i1
+ #      define ASERMAN_BINDER_READ_KERNEL_OFFSET_ADDR  m7_p2
+ #      define ASERMAN_BINDER_READ_KERNEL_OFFSET_SIZE  m7_i2
+ #      define ASERMAN_BINDER_READ_KERNEL_CODE         m7_i3
+ #define ASERMAN_BINDER_WRITE_KERNEL   (ASERMAN_BASE + 4)
+ #      define ASERMAN_BINDER_WRITE_KERNEL_DATA_ADDR  m10_l1
+ #      define ASERMAN_BINDER_WRITE_KERNEL_DATA_SIZE   m10_i1
+ #      define ASERMAN_BINDER_WRITE_KERNEL_OFFSET_ADDR m10_l2
+ #      define ASERMAN_BINDER_WRITE_KERNEL_OFFSET_SIZE m10_i2
+ #      define ASERMAN_BINDER_WRITE_KERNEL_CODE        m10_i3
+
+ #define ZYGOTE_BASE 0x1A00
+
+ /* ZYGOTE */
+ #define ZYGOTE_UP	(ZYGOTE_BASE + 1)
+ #define ZYGOTE_DOWN	(ZYGOTE_BASE + 2)
+ #define ZYGOTE_REFRESHGOTE_BASE 0x1A00
+
+ /* ZYGOTE */
+ #define ZYGOTE_UP		(ZYGOTE_BASE + 1)
+ #define ZYGOTE_DOWN		(ZYGOTE_BASE + 2)
+ #define ZYGOTE_REFRESH		(ZYGOTE_BASE + 3)
+ #define ZYGOTE_SHUTDOWN	(ZYGOTE_BASE + 4)
+ #define ZYGOTE_UPDATE		(ZYGOTE_BASE + 5)
+ #define ZYGOTE_CLONE		(ZYGOTE_BASE + 6)
+ #define ZYGOTE_EDIT		(ZYGOTE_BASE + 7)
+ #define ZYGOTE_LOOKUP		(ZYGOTE_BASE + 8)
+
+ #  define ZYGOTE_CMD_ADDR           m1_p1           /* command string */
+ #  define ZYGOTE_CMD_LEN            m1_i1           /* length of command */
+ #  define ZYGOTE_PERIOD             m1_i2           /* heartbeat period */
+ #  define ZYGOTE_DEV_MAJOR          m1_i3           /* major device number */
+
+ #  define ZYGOTE_ENDPOINT           m1_i1           /* endpoint number in reply */
+
+ #  define ZYGOTE_NAME               m1_p1           /* name */
+ #  define ZYGOTE_NAME_LEN           m1_i1           /* namelen */
+
+#define DUM_SERVER_BASE	0x1B00
+ #define DUM_SERVER_CALL_BACK	(DUM_SERVER_BASE+1)
+ #	define BINDERCOPY_SRC_END	m2_i1
+ #	define BINDERCOPY_DST_END	m2_i2
+ #	define BINDERCOPY_SIZE		m2_i3
+ #	define BINDERCOPY_SRC_ADDR	m2_l1
+ #	define BINDERCOPY_DST_ADDR	m2_l2
 /* _MINIX_COM_H */
