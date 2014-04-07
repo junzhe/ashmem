@@ -40,7 +40,14 @@ int ashmem_create_region(const char *name, size_t size)
 	m2.ASHMEM_SET_SIZE_ID = id;
 	m2.ASHMEM_SET_SIZE_SIZE = size;
 
-	return _syscall(ashmem_pt, ASHMEM_SET_SIZE, &m2);
+	printf("ashmem_create_region %d\n", id);
+
+	r = _syscall(ashmem_pt, ASHMEM_SET_SIZE, &m2);
+
+	if(r != OK)
+		return r;
+
+	return id;
 }
 
 void *ashmem_mmap(void *addr, size_t length, int prot,

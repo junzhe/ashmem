@@ -314,7 +314,8 @@ static void update_ref_count_destroy()
 
 int do_ashmem_create_region(message *m)
 {
-	printf("Call do_ashmem_create_region\n");
+	if(verbose)
+		printf("Call do_ashmem_create_region\n");
 
 	struct ashmem_area *ashmem;
 
@@ -324,11 +325,16 @@ int do_ashmem_create_region(message *m)
 
 	m->ASHMEM_CREATE_RETID = ashmem->id;
 
+	printf("id %d\n", ashmem->id);
+
 	return OK;
 }
 
 int do_ashmem_mmap_region(message *m)
 {
+	if(verbose)
+		printf("ASHMEM do_ashmem_mmap_region\n");
+
 	int id, flag;
 	vir_bytes addr;
 	void *ret;
@@ -336,6 +342,8 @@ int do_ashmem_mmap_region(message *m)
 
 	id = m->ASHMEM_MMAP_ID;
 	addr = m->ASHMEM_MMAP_ADDR;
+
+	printf("id %d\n", id);
 
 	ashmem = ashmem_find_by_id(id);
 
@@ -386,12 +394,18 @@ int do_ashmem_set_name_region(message *m)
 
 int do_ashmem_set_size_region(message *m)
 {
+	
+	if(verbose)
+		printf("ASHMEM ashmem_set_size_region\n");
+
 	int id;
 	long size;
 	struct ashmem_area *ashmem;
 
 	id = m->ASHMEM_SET_SIZE_ID;
 	size = m->ASHMEM_SET_SIZE_SIZE;
+
+	printf("id %d\n", id);
 
 	ashmem = ashmem_find_by_id(id);
 
